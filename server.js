@@ -60,11 +60,11 @@ addDepartment = () => {
     inquirer.prompt({
         name: "newDepartment",
         type: "input",
-        message: "Please add a department name."
+        message: "Please add a department name:"
     }).then(answer => {
         connection.query("INSERT INTO department (name) VALUES (?)", [answer.newDepartment], function(err){
             if (err) throw err;
-            console.log(`New department added: ${answer.newDepartment}!`);
+            console.log(`You successfully added a new department: ${answer.newDepartment}!`);
             beginEmpPrompt();
         })
     });
@@ -76,4 +76,50 @@ viewDepartments = () => {
         console.table(res);
         beginEmpPrompt();
     });
+}
+
+addRole = () => {
+    inquirer.prompt([{
+        name: "newRole",
+        type: "input",
+        message: "Please enter a new role:"
+    }, {
+        name: "salary",
+        type: "input",
+        message: "Please enter the role's salary:",
+        validate: valdiateSalary
+    }, {
+        name: "deparmentId",
+        type: "input",
+        message: "Please enter a department ID:",
+        validate: validateId
+    }]).then(answer => {
+        connection.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [answer.newRole, answer.salary, answer.departmentId], function(err) {
+            if (err) throw err;
+            console.log(`You successfully added a new role: ${answer.newRole}.`)
+            beginEmpPrompt();
+        })
+    })
+}
+
+viewRoles = () => {
+    connection.query("SELECT * FROM role", function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        beginEmpPrompt();
+    });
+}
+
+valdiateSalary = (salary) => {
+    if (isNaN(salary)) {
+        return "Entry is invalid. Please resubmit with a valid number."
+    }
+    return true;
+}
+
+validateId = (id) => {
+    if (isNaN(id)) {
+        return "Entry is invalid. Please resubmit with a valid number."
+    }
+    return true;
 }
