@@ -110,6 +110,42 @@ viewRoles = () => {
     });
 }
 
+addEmployee = () => {
+    inquirer.prompt([{
+        name: "firstName",
+        type: "input",
+        message: "Please enter the Employee's first name:"
+    }, {
+        name: "lastName",
+        type: "input",
+        message: "Please enter the Employee's last name:"
+    }, {
+        name: "roleId",
+        type: "input",
+        message: "Please enter the Employee's ID:",
+        validate: validateId
+    }, {
+        name: "managerId",
+        type: "input",
+        message: "Please enter the Manager's ID:",
+        validate: validateId
+    }]).then(answer => {
+        connection.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [answer.firtName, answer.lastName, answer.roleId, answer.managerId], function (err){
+            if (err) throw err;
+            console.log(`You successfully added new Employee ${answer.firstName} ${answer.lastName}.`);
+            beginEmpPrompt();
+        })
+    });
+}
+
+viewEmployees = () => {
+    connection.query("SELECT * FROM employee", function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        beginEmpPrompt();
+    });
+}
+
 valdiateSalary = (salary) => {
     if (isNaN(salary)) {
         return "Entry is invalid. Please resubmit with a valid number."
