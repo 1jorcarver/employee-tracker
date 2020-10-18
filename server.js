@@ -55,3 +55,25 @@ beginEmpPrompt = () => {
         }
     })
 };
+
+addDepartment = () => {
+    inquirer.prompt({
+        name: "newDepartment",
+        type: "input",
+        message: "Please add a department name."
+    }).then(answer => {
+        connection.query("INSERT INTO department (name) VALUES (?)", [answer.newDepartment], function(err){
+            if (err) throw err;
+            console.log(`New department added: ${answer.newDepartment}!`);
+            beginEmpPrompt();
+        })
+    });
+}
+
+viewDepartments = () => {
+    connection.query("SELECT * FROM department", function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        beginEmpPrompt();
+    });
+}
