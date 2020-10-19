@@ -1,4 +1,5 @@
--- DROP DATABASE IF EXISTS companyDb;
+DROP DATABASE IF EXISTS companyDb;
+
 CREATE DATABASE companyDb;
 
 USE companyDb;
